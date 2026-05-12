@@ -2,7 +2,7 @@ import { PrismaClient } from "@/app/generated/prisma";
 import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { neon } from "@neondatabase/serverless";
-import { PrismaNeonHTTP } from "@prisma/adapter-neon";
+import { PrismaNeon } from "@prisma/adapter-neon";
 
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 
@@ -11,7 +11,7 @@ function createPrismaClient() {
 
   if (url.includes("neon.tech")) {
     const sql = neon(url);
-    const adapter = new PrismaNeonHTTP(sql);
+    const adapter = new PrismaNeon(sql);
     return new PrismaClient({ adapter });
   }
 
