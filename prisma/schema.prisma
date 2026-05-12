@@ -1,0 +1,69 @@
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../app/generated/prisma"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum EntryType {
+  BUG
+  UI
+  MISC
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+  VERY_HARD
+  EXTREME
+}
+
+
+model WorkEntry {
+  id        String    @id @default(cuid())
+  date      DateTime  @default(now())
+  type      EntryType
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  bugEntry  BugEntry?
+  uiEntry   UIEntry?
+  miscEntry MiscEntry?
+}
+
+model BugEntry {
+  id          String     @id @default(cuid())
+  bugUrl      String
+  description String
+  difficulty  Difficulty
+  customer    String
+  branch      String
+
+  workEntryId String    @unique
+  workEntry   WorkEntry @relation(fields: [workEntryId], references: [id], onDelete: Cascade)
+}
+
+model UIEntry {
+  id          String @id @default(cuid())
+  clientName  String
+  figmaUrl    String
+  customer    String
+  branch      String
+
+  workEntryId String    @unique
+  workEntry   WorkEntry @relation(fields: [workEntryId], references: [id], onDelete: Cascade)
+}
+
+model MiscEntry {
+  id          String @id @default(cuid())
+  description String
+  customer    String
+  branch      String
+
+  workEntryId String    @unique
+  workEntry   WorkEntry @relation(fields: [workEntryId], references: [id], onDelete: Cascade)
+}
