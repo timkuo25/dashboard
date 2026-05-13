@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import StatsPanel from "@/components/StatsPanel";
+import AddEntryModal from "@/components/AddEntryModal";
 import { getWeekStart, formatWeekLabel } from "@/lib/week";
 
 type Entry = { id: string; type: "BUG" | "UI" | "MISC"; date: string };
@@ -23,8 +24,9 @@ const TYPE_COLORS: Record<string, string> = {
 export default function Home() {
   const [weeks, setWeeks] = useState<WeekBlock[]>([]);
   const [statsKey, setStatsKey] = useState(0);
+  const [showModal, setShowModal] = useState(false);
 
-  useEffect(() => {
+  function loadEntries() {
     fetch("/api/entries")
       .then((r) => r.json())
       .then((entries: Entry[]) => {
@@ -41,13 +43,21 @@ export default function Home() {
         const sorted = Array.from(map.values()).sort((a, b) => b.weekStart.localeCompare(a.weekStart));
         setWeeks(sorted);
       });
-  }, [statsKey]);
+  }
+
+  useEffect(() => { loadEntries(); }, [statsKey]);
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       <main className="max-w-3xl mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold">Work Dashboard</h1>
+          <button
+            onClick={() => setShowModal(true)}
+            className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+          >
+            + Add Entry
+          </button>
         </div>
 
         <StatsPanel key={statsKey} all />
@@ -77,6 +87,13 @@ export default function Home() {
           ))}
         </div>
       </main>
+
+      {showModal && (
+        <AddEntryModal
+          onClose={() => setShowModal(false)}
+          onAdded={() => { setStatsKey((k) => k + 1); loadEntries(); }}
+        />
+      )}
     </div>
   );
 }

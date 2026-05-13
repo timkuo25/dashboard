@@ -3,7 +3,6 @@
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import EntryCard from "@/components/EntryCard";
-import AddEntryModal from "@/components/AddEntryModal";
 import StatsPanel from "@/components/StatsPanel";
 import { formatWeekLabel } from "@/lib/week";
 
@@ -27,7 +26,6 @@ const TYPE_ORDER = ["BUG", "UI", "MISC"] as const;
 export default function WeekPage({ params }: { params: Promise<{ weekStart: string }> }) {
   const [weekStart, setWeekStart] = useState("");
   const [entries, setEntries] = useState<WorkEntry[]>([]);
-  const [showModal, setShowModal] = useState(false);
 
   const fetchEntries = useCallback((ws: string) => {
     fetch(`/api/entries?weekStart=${ws}`)
@@ -63,12 +61,6 @@ export default function WeekPage({ params }: { params: Promise<{ weekStart: stri
             <Link href="/" className="text-gray-400 hover:text-white text-sm">← Back</Link>
             <h1 className="text-lg font-semibold">{formatWeekLabel(weekStart)}</h1>
           </div>
-          <button
-            onClick={() => setShowModal(true)}
-            className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-          >
-            + Add Entry
-          </button>
         </div>
 
         <div className="flex flex-col gap-8">
@@ -92,14 +84,6 @@ export default function WeekPage({ params }: { params: Promise<{ weekStart: stri
           ))}
         </div>
       </main>
-
-      {showModal && (
-        <AddEntryModal
-          defaultDate={weekStart}
-          onClose={() => setShowModal(false)}
-          onAdded={() => fetchEntries(weekStart)}
-        />
-      )}
     </div>
   );
 }

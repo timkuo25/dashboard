@@ -7,17 +7,19 @@ export async function GET(req: NextRequest) {
   const allTime = searchParams.get("all") === "true";
 
   if (allTime) {
-    const [allEntries, allBugEntries] = await Promise.all([
+    const [allEntries, allBugEntries, allUIEntries, allMiscEntries] = await Promise.all([
       prisma.workEntry.findMany({ select: { type: true } }),
       prisma.bugEntry.findMany({ select: { difficulty: true } }),
+      prisma.uIEntry.findMany({ select: { difficulty: true } }),
+      prisma.miscEntry.findMany({ select: { difficulty: true } }),
     ]);
 
     const byType = { BUG: 0, UI: 0, MISC: 0 };
     for (const e of allEntries) byType[e.type]++;
 
     const difficultyCount: Record<string, number> = {};
-    for (const e of allBugEntries) {
-      difficultyCount[e.difficulty] = (difficultyCount[e.difficulty] ?? 0) + 1;
+    for (const e of [...allBugEntries, ...allUIEntries, ...allMiscEntries]) {
+      if (e.difficulty) difficultyCount[e.difficulty] = (difficultyCount[e.difficulty] ?? 0) + 1;
     }
 
     return NextResponse.json({
@@ -45,7 +47,7 @@ export async function GET(req: NextRequest) {
 
   const startOfMonth = new Date(Date.UTC(weekStart.getUTCFullYear(), weekStart.getUTCMonth(), 1));
 
-  const [weekEntries, monthEntries, weekBugEntries] = await Promise.all([
+  const [weekEntries, monthEntries, weekBugEntries, weekUIEntries, weekMiscEntries] = await Promise.all([
     prisma.workEntry.findMany({
       where: { date: { gte: weekStart, lt: weekEnd } },
       select: { type: true, date: true },
@@ -58,6 +60,14 @@ export async function GET(req: NextRequest) {
       where: { workEntry: { date: { gte: weekStart, lt: weekEnd } } },
       select: { difficulty: true },
     }),
+    prisma.uIEntry.findMany({
+      where: { workEntry: { date: { gte: weekStart, lt: weekEnd } } },
+      select: { difficulty: true },
+    }),
+    prisma.miscEntry.findMany({
+      where: { workEntry: { date: { gte: weekStart, lt: weekEnd } } },
+      select: { difficulty: true },
+    }),
   ]);
 
   const weekByType = { BUG: 0, UI: 0, MISC: 0 };
@@ -67,8 +77,8 @@ export async function GET(req: NextRequest) {
   for (const e of monthEntries) monthByType[e.type]++;
 
   const difficultyCount: Record<string, number> = {};
-  for (const e of weekBugEntries) {
-    difficultyCount[e.difficulty] = (difficultyCount[e.difficulty] ?? 0) + 1;
+  for (const e of [...weekBugEntries, ...weekUIEntries, ...weekMiscEntries]) {
+    if (e.difficulty) difficultyCount[e.difficulty] = (difficultyCount[e.difficulty] ?? 0) + 1;
   }
 
   const weekDailyMap: Record<string, number> = {};

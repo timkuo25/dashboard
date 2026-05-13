@@ -80,7 +80,7 @@ export default function StatsPanel({ weekStart, all }: { weekStart?: string; all
       </div>
 
       <div className="bg-gray-800 rounded-xl p-5">
-        <p className="text-gray-400 text-sm mb-2">Bug Difficulty</p>
+        <p className="text-gray-400 text-sm mb-2">Task Difficulty</p>
         <div className="h-44">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={difficultyData} layout="vertical">

@@ -67,6 +67,11 @@ export default function EntryCard({ entry, onDelete, showDate }: { entry: WorkEn
           <div className="flex flex-col gap-0.5 mt-1">
             <p className="text-white text-sm font-medium">{entry.uiEntry.clientName}</p>
             <p className="text-indigo-400 text-sm">Figma</p>
+            {entry.uiEntry.difficulty && (
+              <span className={`text-xs px-2 py-0.5 rounded-full w-fit ${DIFFICULTY_COLORS[entry.uiEntry.difficulty]}`}>
+                {entry.uiEntry.difficulty}
+              </span>
+            )}
             <Meta customer={entry.uiEntry.customer} branch={entry.uiEntry.branch} />
           </div>
         )}
@@ -74,6 +79,11 @@ export default function EntryCard({ entry, onDelete, showDate }: { entry: WorkEn
         {entry.type === "MISC" && entry.miscEntry && (
           <div className="flex flex-col gap-0.5 mt-1">
             <p className="text-white text-sm">{entry.miscEntry.description}</p>
+            {entry.miscEntry.difficulty && (
+              <span className={`text-xs px-2 py-0.5 rounded-full w-fit ${DIFFICULTY_COLORS[entry.miscEntry.difficulty]}`}>
+                {entry.miscEntry.difficulty}
+              </span>
+            )}
             <Meta customer={entry.miscEntry.customer} branch={entry.miscEntry.branch} />
           </div>
         )}
