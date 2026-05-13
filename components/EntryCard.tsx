@@ -3,8 +3,8 @@
 import Link from "next/link";
 
 type BugEntry = { bugUrl: string; description: string; difficulty: string; customer: string; branch: string };
-type UIEntry = { clientName: string; figmaUrl: string; customer: string; branch: string };
-type MiscEntry = { description: string; customer: string; branch: string };
+type UIEntry = { clientName: string; figmaUrl: string; difficulty: string | null; customer: string; branch: string };
+type MiscEntry = { description: string; difficulty: string | null; customer: string; branch: string };
 
 type WorkEntry = {
   id: string;

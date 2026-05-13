@@ -12,8 +12,8 @@ type WorkEntry = {
   type: "BUG" | "UI" | "MISC";
   date: string;
   bugEntry?: { bugUrl: string; description: string; difficulty: string; customer: string; branch: string } | null;
-  uiEntry?: { clientName: string; figmaUrl: string; customer: string; branch: string } | null;
-  miscEntry?: { description: string; customer: string; branch: string } | null;
+  uiEntry?: { clientName: string; figmaUrl: string; difficulty: string | null; customer: string; branch: string } | null;
+  miscEntry?: { description: string; difficulty: string | null; customer: string; branch: string } | null;
 };
 
 const TYPE_LABEL: Record<string, string> = {

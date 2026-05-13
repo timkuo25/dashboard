@@ -5,8 +5,8 @@ import { useState } from "react";
 const DIFFICULTIES = ["EASY", "MEDIUM", "HARD", "VERY_HARD", "EXTREME"];
 
 type BugEntry = { bugUrl: string; description: string; difficulty: string; customer: string; branch: string };
-type UIEntry = { clientName: string; figmaUrl: string; difficulty: string; customer: string; branch: string };
-type MiscEntry = { description: string; difficulty: string; customer: string; branch: string };
+type UIEntry = { clientName: string; figmaUrl: string; difficulty: string | null; customer: string; branch: string };
+type MiscEntry = { description: string; difficulty: string | null; customer: string; branch: string };
 
 type WorkEntry = {
   id: string;
@@ -24,8 +24,8 @@ type Props = {
 };
 
 const DEFAULT_BUG: BugEntry = { bugUrl: "", description: "", difficulty: "MEDIUM", customer: "", branch: "" };
-const DEFAULT_UI: UIEntry = { clientName: "", figmaUrl: "", difficulty: "", customer: "", branch: "" };
-const DEFAULT_MISC: MiscEntry = { description: "", difficulty: "", customer: "", branch: "" };
+const DEFAULT_UI: UIEntry = { clientName: "", figmaUrl: "", difficulty: null, customer: "", branch: "" };
+const DEFAULT_MISC: MiscEntry = { description: "", difficulty: null, customer: "", branch: "" };
 
 export default function EditEntryForm({ entry, onSaved, onCancel }: Props) {
   const [saving, setSaving] = useState(false);
@@ -115,7 +115,7 @@ export default function EditEntryForm({ entry, onSaved, onCancel }: Props) {
           </div>
           <div>
             <p className={labelCls}>Difficulty (optional)</p>
-            <select className={inputCls} value={uiContent.difficulty} onChange={(e) => setUiContent({ ...uiContent, difficulty: e.target.value })}>
+            <select className={inputCls} value={uiContent.difficulty ?? ""} onChange={(e) => setUiContent({ ...uiContent, difficulty: e.target.value || null })}>
               <option value="">—</option>
               {DIFFICULTIES.map((d) => <option key={d}>{d}</option>)}
             </select>
@@ -139,7 +139,7 @@ export default function EditEntryForm({ entry, onSaved, onCancel }: Props) {
           </div>
           <div>
             <p className={labelCls}>Difficulty (optional)</p>
-            <select className={inputCls} value={miscContent.difficulty} onChange={(e) => setMiscContent({ ...miscContent, difficulty: e.target.value })}>
+            <select className={inputCls} value={miscContent.difficulty ?? ""} onChange={(e) => setMiscContent({ ...miscContent, difficulty: e.target.value || null })}>
               <option value="">—</option>
               {DIFFICULTIES.map((d) => <option key={d}>{d}</option>)}
             </select>
