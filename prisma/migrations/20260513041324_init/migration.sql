@@ -4,9 +4,6 @@ CREATE TYPE "EntryType" AS ENUM ('BUG', 'UI', 'MISC');
 -- CreateEnum
 CREATE TYPE "Difficulty" AS ENUM ('EASY', 'MEDIUM', 'HARD', 'VERY_HARD', 'EXTREME');
 
--- CreateEnum
-CREATE TYPE "MiscCategory" AS ENUM ('UI_CHANGE', 'CORE_UPDATE', 'FILE_UPDATE', 'TRANSLATION', 'URL_UPDATE', 'OTHER');
-
 -- CreateTable
 CREATE TABLE "WorkEntry" (
     "id" TEXT NOT NULL,
@@ -24,6 +21,8 @@ CREATE TABLE "BugEntry" (
     "bugUrl" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "difficulty" "Difficulty" NOT NULL,
+    "customer" TEXT NOT NULL,
+    "branch" TEXT NOT NULL,
     "workEntryId" TEXT NOT NULL,
 
     CONSTRAINT "BugEntry_pkey" PRIMARY KEY ("id")
@@ -34,6 +33,9 @@ CREATE TABLE "UIEntry" (
     "id" TEXT NOT NULL,
     "clientName" TEXT NOT NULL,
     "figmaUrl" TEXT NOT NULL,
+    "difficulty" "Difficulty",
+    "customer" TEXT NOT NULL,
+    "branch" TEXT NOT NULL,
     "workEntryId" TEXT NOT NULL,
 
     CONSTRAINT "UIEntry_pkey" PRIMARY KEY ("id")
@@ -43,7 +45,9 @@ CREATE TABLE "UIEntry" (
 CREATE TABLE "MiscEntry" (
     "id" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "category" "MiscCategory" NOT NULL,
+    "difficulty" "Difficulty",
+    "customer" TEXT NOT NULL,
+    "branch" TEXT NOT NULL,
     "workEntryId" TEXT NOT NULL,
 
     CONSTRAINT "MiscEntry_pkey" PRIMARY KEY ("id")

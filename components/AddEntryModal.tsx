@@ -16,8 +16,8 @@ export default function AddEntryModal({ onClose, onAdded, defaultDate }: Props) 
   const [loading, setLoading] = useState(false);
 
   const [bugContent, setBugContent] = useState({ bugUrl: "", description: "", difficulty: "MEDIUM", customer: "", branch: "" });
-  const [uiContent, setUiContent] = useState({ clientName: "", figmaUrl: "", customer: "", branch: "" });
-  const [miscContent, setMiscContent] = useState({ description: "", customer: "", branch: "" });
+  const [uiContent, setUiContent] = useState({ clientName: "", figmaUrl: "", difficulty: "", customer: "", branch: "" });
+  const [miscContent, setMiscContent] = useState({ description: "", difficulty: "", customer: "", branch: "" });
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -76,6 +76,10 @@ export default function AddEntryModal({ onClose, onAdded, defaultDate }: Props) 
             <>
               <input placeholder="Client name" value={uiContent.clientName} onChange={(e) => setUiContent({ ...uiContent, clientName: e.target.value })} required className="bg-gray-700 text-white rounded-lg px-3 py-2 text-sm placeholder-gray-400" />
               <input placeholder="Figma URL" value={uiContent.figmaUrl} onChange={(e) => setUiContent({ ...uiContent, figmaUrl: e.target.value })} required className="bg-gray-700 text-white rounded-lg px-3 py-2 text-sm placeholder-gray-400" />
+              <select value={uiContent.difficulty} onChange={(e) => setUiContent({ ...uiContent, difficulty: e.target.value })} className="bg-gray-700 text-white rounded-lg px-3 py-2 text-sm">
+                <option value="">Difficulty (optional)</option>
+                {DIFFICULTIES.map((d) => <option key={d}>{d}</option>)}
+              </select>
               <input placeholder="Customer" value={uiContent.customer} onChange={(e) => setUiContent({ ...uiContent, customer: e.target.value })} required className="bg-gray-700 text-white rounded-lg px-3 py-2 text-sm placeholder-gray-400" />
               <input placeholder="Branch" value={uiContent.branch} onChange={(e) => setUiContent({ ...uiContent, branch: e.target.value })} className="bg-gray-700 text-white rounded-lg px-3 py-2 text-sm placeholder-gray-400" />
             </>
@@ -84,6 +88,10 @@ export default function AddEntryModal({ onClose, onAdded, defaultDate }: Props) 
           {type === "MISC" && (
             <>
               <input placeholder="Description" value={miscContent.description} onChange={(e) => setMiscContent({ ...miscContent, description: e.target.value })} required className="bg-gray-700 text-white rounded-lg px-3 py-2 text-sm placeholder-gray-400" />
+              <select value={miscContent.difficulty} onChange={(e) => setMiscContent({ ...miscContent, difficulty: e.target.value })} className="bg-gray-700 text-white rounded-lg px-3 py-2 text-sm">
+                <option value="">Difficulty (optional)</option>
+                {DIFFICULTIES.map((d) => <option key={d}>{d}</option>)}
+              </select>
               <input placeholder="Customer" value={miscContent.customer} onChange={(e) => setMiscContent({ ...miscContent, customer: e.target.value })} required className="bg-gray-700 text-white rounded-lg px-3 py-2 text-sm placeholder-gray-400" />
               <input placeholder="Branch" value={miscContent.branch} onChange={(e) => setMiscContent({ ...miscContent, branch: e.target.value })} className="bg-gray-700 text-white rounded-lg px-3 py-2 text-sm placeholder-gray-400" />
             </>

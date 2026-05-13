@@ -5,8 +5,8 @@ import { useState } from "react";
 const DIFFICULTIES = ["EASY", "MEDIUM", "HARD", "VERY_HARD", "EXTREME"];
 
 type BugEntry = { bugUrl: string; description: string; difficulty: string; customer: string; branch: string };
-type UIEntry = { clientName: string; figmaUrl: string; customer: string; branch: string };
-type MiscEntry = { description: string; customer: string; branch: string };
+type UIEntry = { clientName: string; figmaUrl: string; difficulty: string; customer: string; branch: string };
+type MiscEntry = { description: string; difficulty: string; customer: string; branch: string };
 
 type WorkEntry = {
   id: string;
@@ -24,8 +24,8 @@ type Props = {
 };
 
 const DEFAULT_BUG: BugEntry = { bugUrl: "", description: "", difficulty: "MEDIUM", customer: "", branch: "" };
-const DEFAULT_UI: UIEntry = { clientName: "", figmaUrl: "", customer: "", branch: "" };
-const DEFAULT_MISC: MiscEntry = { description: "", customer: "", branch: "" };
+const DEFAULT_UI: UIEntry = { clientName: "", figmaUrl: "", difficulty: "", customer: "", branch: "" };
+const DEFAULT_MISC: MiscEntry = { description: "", difficulty: "", customer: "", branch: "" };
 
 export default function EditEntryForm({ entry, onSaved, onCancel }: Props) {
   const [saving, setSaving] = useState(false);
@@ -114,6 +114,13 @@ export default function EditEntryForm({ entry, onSaved, onCancel }: Props) {
             <input className={inputCls} value={uiContent.figmaUrl} onChange={(e) => setUiContent({ ...uiContent, figmaUrl: e.target.value })} />
           </div>
           <div>
+            <p className={labelCls}>Difficulty (optional)</p>
+            <select className={inputCls} value={uiContent.difficulty} onChange={(e) => setUiContent({ ...uiContent, difficulty: e.target.value })}>
+              <option value="">—</option>
+              {DIFFICULTIES.map((d) => <option key={d}>{d}</option>)}
+            </select>
+          </div>
+          <div>
             <p className={labelCls}>Customer</p>
             <input className={inputCls} value={uiContent.customer} onChange={(e) => setUiContent({ ...uiContent, customer: e.target.value })} />
           </div>
@@ -129,6 +136,13 @@ export default function EditEntryForm({ entry, onSaved, onCancel }: Props) {
           <div>
             <p className={labelCls}>Description</p>
             <input className={inputCls} value={miscContent.description} onChange={(e) => setMiscContent({ ...miscContent, description: e.target.value })} />
+          </div>
+          <div>
+            <p className={labelCls}>Difficulty (optional)</p>
+            <select className={inputCls} value={miscContent.difficulty} onChange={(e) => setMiscContent({ ...miscContent, difficulty: e.target.value })}>
+              <option value="">—</option>
+              {DIFFICULTIES.map((d) => <option key={d}>{d}</option>)}
+            </select>
           </div>
           <div>
             <p className={labelCls}>Customer</p>

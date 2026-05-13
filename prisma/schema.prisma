@@ -48,9 +48,10 @@ model BugEntry {
 }
 
 model UIEntry {
-  id          String @id @default(cuid())
+  id          String      @id @default(cuid())
   clientName  String
   figmaUrl    String
+  difficulty  Difficulty?
   customer    String
   branch      String
 
@@ -59,8 +60,9 @@ model UIEntry {
 }
 
 model MiscEntry {
-  id          String @id @default(cuid())
+  id          String      @id @default(cuid())
   description String
+  difficulty  Difficulty?
   customer    String
   branch      String
 

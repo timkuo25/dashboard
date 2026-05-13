@@ -43,17 +43,17 @@ export async function PATCH(req: NextRequest, { params }: Params) {
       if (type === "BUG") {
         await tx.bugEntry.create({ data: { bugUrl: content.bugUrl, description: content.description, difficulty: content.difficulty as Difficulty, customer: content.customer, branch: content.branch, workEntryId: id } });
       } else if (type === "UI") {
-        await tx.uIEntry.create({ data: { clientName: content.clientName, figmaUrl: content.figmaUrl, customer: content.customer, branch: content.branch, workEntryId: id } });
+        await tx.uIEntry.create({ data: { clientName: content.clientName, figmaUrl: content.figmaUrl, difficulty: content.difficulty ? (content.difficulty as Difficulty) : null, customer: content.customer, branch: content.branch, workEntryId: id } });
       } else if (type === "MISC") {
-        await tx.miscEntry.create({ data: { description: content.description, customer: content.customer, branch: content.branch, workEntryId: id } });
+        await tx.miscEntry.create({ data: { description: content.description, difficulty: content.difficulty ? (content.difficulty as Difficulty) : null, customer: content.customer, branch: content.branch, workEntryId: id } });
       }
     } else {
       if (entry.type === "BUG" && entry.bugEntry) {
         await tx.bugEntry.update({ where: { id: entry.bugEntry.id }, data: { bugUrl: content.bugUrl, description: content.description, difficulty: content.difficulty as Difficulty, customer: content.customer, branch: content.branch } });
       } else if (entry.type === "UI" && entry.uiEntry) {
-        await tx.uIEntry.update({ where: { id: entry.uiEntry.id }, data: { clientName: content.clientName, figmaUrl: content.figmaUrl, customer: content.customer, branch: content.branch } });
+        await tx.uIEntry.update({ where: { id: entry.uiEntry.id }, data: { clientName: content.clientName, figmaUrl: content.figmaUrl, difficulty: content.difficulty ? (content.difficulty as Difficulty) : null, customer: content.customer, branch: content.branch } });
       } else if (entry.type === "MISC" && entry.miscEntry) {
-        await tx.miscEntry.update({ where: { id: entry.miscEntry.id }, data: { description: content.description, customer: content.customer, branch: content.branch } });
+        await tx.miscEntry.update({ where: { id: entry.miscEntry.id }, data: { description: content.description, difficulty: content.difficulty ? (content.difficulty as Difficulty) : null, customer: content.customer, branch: content.branch } });
       }
     }
   });

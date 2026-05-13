@@ -69,6 +69,7 @@ export async function POST(req: NextRequest) {
           create: {
             clientName: content.clientName,
             figmaUrl: content.figmaUrl,
+            difficulty: content.difficulty ? (content.difficulty as Difficulty) : null,
             customer: content.customer,
             branch: content.branch,
           },
@@ -90,6 +91,7 @@ export async function POST(req: NextRequest) {
         miscEntry: {
           create: {
             description: content.description,
+            difficulty: content.difficulty ? (content.difficulty as Difficulty) : null,
             customer: content.customer,
             branch: content.branch,
           },
