@@ -43,51 +43,56 @@ export default function EntryCard({ entry, onDelete, showDate }: { entry: WorkEn
     ? new Date(entry.date).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: "UTC" })
     : null;
   return (
-    <div className="relative bg-gray-800 rounded-xl hover:bg-gray-750 transition-colors">
-      <Link href={`/entries/${entry.id}`} className="block p-4 pr-10">
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${TYPE_BADGE[entry.type]}`}>
-            {entry.type}
+    <div className="relative bg-gray-800 rounded-xl p-4 pr-10">
+      <div className="flex items-center gap-2 flex-wrap mb-1">
+        <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${TYPE_BADGE[entry.type]}`}>
+          {entry.type}
+        </span>
+        {dateLabel && <span className="text-xs text-gray-500">{dateLabel}</span>}
+      </div>
+
+      {entry.type === "BUG" && entry.bugEntry && (
+        <div className="flex flex-col gap-0.5">
+          <Link href={`/entries/${entry.id}`} className="text-white text-base font-bold hover:text-indigo-300 w-fit">
+            {entry.bugEntry.description}
+          </Link>
+          <a href={entry.bugEntry.bugUrl} target="_blank" rel="noopener noreferrer" className="text-indigo-400 text-xs truncate hover:underline w-fit max-w-full">
+            {entry.bugEntry.bugUrl}
+          </a>
+          <span className={`text-xs px-2 py-0.5 rounded-full w-fit ${DIFFICULTY_COLORS[entry.bugEntry.difficulty]}`}>
+            {entry.bugEntry.difficulty}
           </span>
-          {dateLabel && <span className="text-xs text-gray-500">{dateLabel}</span>}
+          <Meta customer={entry.bugEntry.customer} branch={entry.bugEntry.branch} />
         </div>
+      )}
 
-        {entry.type === "BUG" && entry.bugEntry && (
-          <div className="flex flex-col gap-0.5 mt-1">
-            <p className="text-indigo-400 text-sm truncate">{entry.bugEntry.bugUrl}</p>
-            <p className="text-white text-sm">{entry.bugEntry.description}</p>
-            <span className={`text-xs px-2 py-0.5 rounded-full w-fit ${DIFFICULTY_COLORS[entry.bugEntry.difficulty]}`}>
-              {entry.bugEntry.difficulty}
+      {entry.type === "UI" && entry.uiEntry && (
+        <div className="flex flex-col gap-0.5">
+          <Link href={`/entries/${entry.id}`} className="text-white text-base font-bold hover:text-indigo-300 w-fit">
+            {entry.uiEntry.clientName}
+          </Link>
+          {entry.uiEntry.difficulty && (
+            <span className={`text-xs px-2 py-0.5 rounded-full w-fit ${DIFFICULTY_COLORS[entry.uiEntry.difficulty]}`}>
+              {entry.uiEntry.difficulty}
             </span>
-            <Meta customer={entry.bugEntry.customer} branch={entry.bugEntry.branch} />
-          </div>
-        )}
+          )}
+          <Meta customer={entry.uiEntry.customer} branch={entry.uiEntry.branch} />
+        </div>
+      )}
 
-        {entry.type === "UI" && entry.uiEntry && (
-          <div className="flex flex-col gap-0.5 mt-1">
-            <p className="text-white text-sm font-medium">{entry.uiEntry.clientName}</p>
-            <p className="text-indigo-400 text-sm">Figma</p>
-            {entry.uiEntry.difficulty && (
-              <span className={`text-xs px-2 py-0.5 rounded-full w-fit ${DIFFICULTY_COLORS[entry.uiEntry.difficulty]}`}>
-                {entry.uiEntry.difficulty}
-              </span>
-            )}
-            <Meta customer={entry.uiEntry.customer} branch={entry.uiEntry.branch} />
-          </div>
-        )}
-
-        {entry.type === "MISC" && entry.miscEntry && (
-          <div className="flex flex-col gap-0.5 mt-1">
-            <p className="text-white text-sm">{entry.miscEntry.description}</p>
-            {entry.miscEntry.difficulty && (
-              <span className={`text-xs px-2 py-0.5 rounded-full w-fit ${DIFFICULTY_COLORS[entry.miscEntry.difficulty]}`}>
-                {entry.miscEntry.difficulty}
-              </span>
-            )}
-            <Meta customer={entry.miscEntry.customer} branch={entry.miscEntry.branch} />
-          </div>
-        )}
-      </Link>
+      {entry.type === "MISC" && entry.miscEntry && (
+        <div className="flex flex-col gap-0.5">
+          <Link href={`/entries/${entry.id}`} className="text-white text-base font-bold hover:text-indigo-300 w-fit">
+            {entry.miscEntry.description}
+          </Link>
+          {entry.miscEntry.difficulty && (
+            <span className={`text-xs px-2 py-0.5 rounded-full w-fit ${DIFFICULTY_COLORS[entry.miscEntry.difficulty]}`}>
+              {entry.miscEntry.difficulty}
+            </span>
+          )}
+          <Meta customer={entry.miscEntry.customer} branch={entry.miscEntry.branch} />
+        </div>
+      )}
 
       <button
         onClick={() => onDelete(entry.id)}
