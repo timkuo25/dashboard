@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useAuth } from "@/components/AuthProvider";
 
 type BugEntry = { bugUrl: string; description: string; difficulty: string; customer: string; branch: string };
 type UIEntry = { clientName: string; figmaUrl: string; difficulty: string | null; customer: string; branch: string };
@@ -38,7 +39,8 @@ function Meta({ customer, branch }: { customer: string; branch: string }) {
   );
 }
 
-export default function EntryCard({ entry, onDelete, showDate }: { entry: WorkEntry; onDelete: (id: string) => void; showDate?: boolean }) {
+export default function EntryCard({ entry, onDelete, showDate }: { entry: WorkEntry; onDelete?: (id: string) => void; showDate?: boolean }) {
+  const { isAdmin } = useAuth();
   const dateLabel = showDate
     ? new Date(entry.date).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: "UTC" })
     : null;
@@ -94,6 +96,7 @@ export default function EntryCard({ entry, onDelete, showDate }: { entry: WorkEn
         </div>
       )}
 
+      {isAdmin && onDelete && (
       <button
         onClick={() => onDelete(entry.id)}
         className="absolute top-3 right-3 text-gray-500 hover:text-red-400 text-lg"
@@ -101,6 +104,7 @@ export default function EntryCard({ entry, onDelete, showDate }: { entry: WorkEn
       >
         ×
       </button>
+      )}
     </div>
   );
 }

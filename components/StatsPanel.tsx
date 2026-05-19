@@ -49,8 +49,8 @@ export default function StatsPanel({ weekStart, all }: { weekStart?: string; all
         <p className="text-4xl font-bold text-white">{stats.week.total}</p>
         {!all && <p className="text-gray-400 text-sm">This Month: {stats.month.total}</p>}
         {!all && (
-          <div className="mt-2 h-32">
-            <ResponsiveContainer width="100%" height="100%">
+          <div className="mt-2">
+            <ResponsiveContainer width="100%" height={128} debounce={1}>
               <BarChart data={stats.week.daily}>
                 <XAxis dataKey="date" tick={{ fontSize: 10, fill: "#9ca3af" }} tickFormatter={(d) => d.slice(5)} />
                 <YAxis tick={{ fontSize: 10, fill: "#9ca3af" }} allowDecimals={false} />
@@ -65,7 +65,7 @@ export default function StatsPanel({ weekStart, all }: { weekStart?: string; all
       <div className="bg-gray-800 rounded-xl p-5">
         <p className="text-gray-400 text-sm mb-2">{all ? "By Type" : "This Week by Type"}</p>
         <div className="h-52">
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height={208} debounce={1}>
             <PieChart>
               <Pie data={typeDistData} dataKey="value" nameKey="name" cx="50%" cy="45%" outerRadius={55} label>
                 {typeDistData.map((entry) => (
@@ -82,7 +82,7 @@ export default function StatsPanel({ weekStart, all }: { weekStart?: string; all
       <div className="bg-gray-800 rounded-xl p-5">
         <p className="text-gray-400 text-sm mb-2">Task Difficulty</p>
         <div className="h-44">
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height={176} debounce={1}>
             <BarChart data={difficultyData} layout="vertical">
               <XAxis type="number" tick={{ fontSize: 10, fill: "#9ca3af" }} allowDecimals={false} />
               <YAxis type="category" dataKey="name" tick={{ fontSize: 10, fill: "#9ca3af" }} width={70} />

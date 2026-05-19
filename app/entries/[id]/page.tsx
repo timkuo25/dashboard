@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import EditEntryForm from "@/components/EditEntryForm";
 import { getWeekStart } from "@/lib/week";
+import { useAuth } from "@/components/AuthProvider";
 
 const DIFFICULTY_COLORS: Record<string, string> = {
   EASY: "bg-green-900 text-green-300",
@@ -31,6 +32,7 @@ type Entry = {
 
 export default function EntryDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
+  const { isAdmin } = useAuth();
   const [entry, setEntry] = useState<Entry | null>(null);
   const [editing, setEditing] = useState(false);
   const [id, setId] = useState<string>("");
@@ -66,12 +68,14 @@ export default function EntryDetailPage({ params }: { params: Promise<{ id: stri
           <span className="text-gray-400 text-sm">{date}</span>
         </div>
         {!editing && (
+          isAdmin ? (
           <button
             onClick={() => setEditing(true)}
             className="text-sm px-3 py-1.5 rounded-lg bg-gray-700 hover:bg-gray-600 text-white transition-colors"
           >
             Edit
           </button>
+          ) : null
         )}
       </div>
 

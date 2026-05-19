@@ -6,6 +6,7 @@ import StatsPanel from "@/components/StatsPanel";
 import AddEntryModal from "@/components/AddEntryModal";
 import RecentBranches from "@/components/RecentBranches";
 import { getWeekStart, formatWeekLabel } from "@/lib/week";
+import { useAuth } from "@/components/AuthProvider";
 
 type Entry = { id: string; type: "BUG" | "UI" | "MISC"; date: string };
 
@@ -49,6 +50,7 @@ function formatMonthLabel(monthKey: string): string {
 }
 
 export default function Home() {
+  const { isAdmin } = useAuth();
   const [weeks, setWeeks] = useState<WeekBlock[]>([]);
   const [statsKey, setStatsKey] = useState(0);
   const [showModal, setShowModal] = useState(false);
@@ -118,12 +120,14 @@ export default function Home() {
       <main className="max-w-5xl mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-bold">Work Dashboard</h1>
+          {isAdmin && (
           <button
             onClick={() => setShowModal(true)}
             className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
           >
             + Add Entry
           </button>
+          )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6 items-start">

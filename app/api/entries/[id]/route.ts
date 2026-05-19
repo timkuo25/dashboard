@@ -15,6 +15,10 @@ export async function GET(_req: NextRequest, { params }: Params) {
 }
 
 export async function PATCH(req: NextRequest, { params }: Params) {
+  if (req.headers.get("x-is-admin") !== "1") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   const { id } = await params;
   const { type, date, content } = await req.json();
 
@@ -65,7 +69,11 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   return NextResponse.json(updated);
 }
 
-export async function DELETE(_req: NextRequest, { params }: Params) {
+export async function DELETE(req: NextRequest, { params }: Params) {
+  if (req.headers.get("x-is-admin") !== "1") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   const { id } = await params;
   const entry = await prisma.workEntry.findUnique({ where: { id } });
   if (!entry) return NextResponse.json({ error: "Not found" }, { status: 404 });
