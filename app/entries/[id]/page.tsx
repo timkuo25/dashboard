@@ -6,17 +6,7 @@ import Link from "next/link";
 import EditEntryForm from "@/components/EditEntryForm";
 import { getWeekStart } from "@/lib/week";
 import { useAuth } from "@/components/AuthProvider";
-
-function maskCustomer(customer: string): string {
-  if (!customer) return "";
-  return "Brand " + customer.charAt(0).toUpperCase();
-}
-
-function maskTitle(title: string, customer: string): string {
-  if (!customer || !title) return title;
-  const escaped = customer.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  return title.replace(new RegExp(escaped, "gi"), "").replace(/\s+/g, " ").trim();
-}
+import { maskCustomer, maskTitle } from "@/lib/guest-mask";
 
 const DIFFICULTY_COLORS: Record<string, string> = {
   EASY: "bg-green-900 text-green-300",

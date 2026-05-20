@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useAuth } from "@/components/AuthProvider";
+import { maskCustomer, maskTitle } from "@/lib/guest-mask";
 
 type BugEntry = { bugUrl: string; description: string; difficulty: string; customer: string; branch: string };
 type UIEntry = { clientName: string; figmaUrl: string; difficulty: string | null; customer: string; branch: string };
@@ -29,17 +30,6 @@ const TYPE_BADGE: Record<string, string> = {
   UI: "bg-blue-900 text-blue-300",
   MISC: "bg-emerald-900 text-emerald-300",
 };
-
-function maskCustomer(customer: string): string {
-  if (!customer) return "";
-  return "Brand " + customer.charAt(0).toUpperCase();
-}
-
-function maskTitle(title: string, customer: string): string {
-  if (!customer || !title) return title;
-  const escaped = customer.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  return title.replace(new RegExp(escaped, "gi"), "").replace(/\s+/g, " ").trim();
-}
 
 function Meta({ customer, branch }: { customer: string; branch: string }) {
   return (
