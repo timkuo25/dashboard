@@ -7,6 +7,17 @@ import EditEntryForm from "@/components/EditEntryForm";
 import { getWeekStart } from "@/lib/week";
 import { useAuth } from "@/components/AuthProvider";
 
+function maskCustomer(customer: string): string {
+  if (!customer) return "";
+  return "Brand " + customer.charAt(0).toUpperCase();
+}
+
+function maskTitle(title: string, customer: string): string {
+  if (!customer || !title) return title;
+  const escaped = customer.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return title.replace(new RegExp(escaped, "gi"), "").replace(/\s+/g, " ").trim();
+}
+
 const DIFFICULTY_COLORS: Record<string, string> = {
   EASY: "bg-green-900 text-green-300",
   MEDIUM: "bg-yellow-900 text-yellow-300",
@@ -81,42 +92,61 @@ export default function EntryDetailPage({ params }: { params: Promise<{ id: stri
 
       {!editing ? (
         <div className="bg-gray-800 rounded-xl p-5">
-          {entry.type === "BUG" && entry.bugEntry && (
-            <div className="flex flex-col gap-2">
-              <a href={entry.bugEntry.bugUrl} target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:underline text-sm break-all">
-                {entry.bugEntry.bugUrl}
-              </a>
-              <p className="text-white">{entry.bugEntry.description}</p>
-              <span className={`text-xs px-2 py-0.5 rounded-full w-fit ${DIFFICULTY_COLORS[entry.bugEntry.difficulty]}`}>
-                {entry.bugEntry.difficulty}
-              </span>
-              <div className="flex gap-4 mt-1">
-                <span className="text-sm text-gray-400">Customer: <span className="text-white">{entry.bugEntry.customer || "—"}</span></span>
-                <span className="text-sm text-gray-400">Branch: <span className="text-white">{entry.bugEntry.branch || "—"}</span></span>
+          {entry.type === "BUG" && entry.bugEntry && (() => {
+            const { bugUrl, description, difficulty, customer, branch } = entry.bugEntry;
+            const displayCustomer = isAdmin ? customer : maskCustomer(customer);
+            const displayTitle = isAdmin ? description : maskTitle(description, customer);
+            return (
+              <div className="flex flex-col gap-2">
+                {isAdmin && (
+                  <a href={bugUrl} target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:underline text-sm break-all">
+                    {bugUrl}
+                  </a>
+                )}
+                <p className="text-white">{displayTitle}</p>
+                <span className={`text-xs px-2 py-0.5 rounded-full w-fit ${DIFFICULTY_COLORS[difficulty]}`}>
+                  {difficulty}
+                </span>
+                <div className="flex gap-4 mt-1">
+                  <span className="text-sm text-gray-400">Customer: <span className="text-white">{displayCustomer || "—"}</span></span>
+                  {isAdmin && <span className="text-sm text-gray-400">Branch: <span className="text-white">{branch || "—"}</span></span>}
+                </div>
               </div>
-            </div>
-          )}
-          {entry.type === "UI" && entry.uiEntry && (
-            <div className="flex flex-col gap-2">
-              <p className="text-white font-medium">{entry.uiEntry.clientName}</p>
-              <a href={entry.uiEntry.figmaUrl} target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:underline text-sm break-all">
-                {entry.uiEntry.figmaUrl}
-              </a>
-              <div className="flex gap-4 mt-1">
-                <span className="text-sm text-gray-400">Customer: <span className="text-white">{entry.uiEntry.customer || "—"}</span></span>
-                <span className="text-sm text-gray-400">Branch: <span className="text-white">{entry.uiEntry.branch || "—"}</span></span>
+            );
+          })()}
+          {entry.type === "UI" && entry.uiEntry && (() => {
+            const { clientName, figmaUrl, customer, branch } = entry.uiEntry;
+            const displayCustomer = isAdmin ? customer : maskCustomer(customer);
+            const displayTitle = isAdmin ? clientName : maskTitle(clientName, customer);
+            return (
+              <div className="flex flex-col gap-2">
+                <p className="text-white font-medium">{displayTitle}</p>
+                {isAdmin && (
+                  <a href={figmaUrl} target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:underline text-sm break-all">
+                    {figmaUrl}
+                  </a>
+                )}
+                <div className="flex gap-4 mt-1">
+                  <span className="text-sm text-gray-400">Customer: <span className="text-white">{displayCustomer || "—"}</span></span>
+                  {isAdmin && <span className="text-sm text-gray-400">Branch: <span className="text-white">{branch || "—"}</span></span>}
+                </div>
               </div>
-            </div>
-          )}
-          {entry.type === "MISC" && entry.miscEntry && (
-            <div className="flex flex-col gap-2">
-              <p className="text-white">{entry.miscEntry.description}</p>
-              <div className="flex gap-4 mt-1">
-                <span className="text-sm text-gray-400">Customer: <span className="text-white">{entry.miscEntry.customer || "—"}</span></span>
-                <span className="text-sm text-gray-400">Branch: <span className="text-white">{entry.miscEntry.branch || "—"}</span></span>
+            );
+          })()}
+          {entry.type === "MISC" && entry.miscEntry && (() => {
+            const { description, customer, branch } = entry.miscEntry;
+            const displayCustomer = isAdmin ? customer : maskCustomer(customer);
+            const displayTitle = isAdmin ? description : maskTitle(description, customer);
+            return (
+              <div className="flex flex-col gap-2">
+                <p className="text-white">{displayTitle}</p>
+                <div className="flex gap-4 mt-1">
+                  <span className="text-sm text-gray-400">Customer: <span className="text-white">{displayCustomer || "—"}</span></span>
+                  {isAdmin && <span className="text-sm text-gray-400">Branch: <span className="text-white">{branch || "—"}</span></span>}
+                </div>
               </div>
-            </div>
-          )}
+            );
+          })()}
         </div>
       ) : (
         <EditEntryForm

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useAuth } from "@/components/AuthProvider";
 
 type BranchItem = {
   branch: string;
@@ -17,13 +18,17 @@ const TYPE_COLORS: Record<string, string> = {
 };
 
 export default function RecentBranches() {
+  const { isAdmin } = useAuth();
   const [branches, setBranches] = useState<BranchItem[]>([]);
 
   useEffect(() => {
+    if (!isAdmin) return;
     fetch("/api/branches")
       .then((r) => r.json())
       .then(setBranches);
-  }, []);
+  }, [isAdmin]);
+
+  if (!isAdmin) return null;
 
   return (
     <div className="bg-gray-800 rounded-xl p-4">

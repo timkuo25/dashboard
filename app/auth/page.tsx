@@ -77,6 +77,13 @@ export default function AuthPage() {
             >
               {loading ? "Logging in…" : "Login"}
             </button>
+            <button
+              type="button"
+              onClick={() => router.push("/")}
+              className="w-full text-gray-400 hover:text-white py-2 text-sm transition-colors"
+            >
+              ← Back to dashboard
+            </button>
           </form>
         )}
       </div>

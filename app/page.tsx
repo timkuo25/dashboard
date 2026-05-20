@@ -130,9 +130,10 @@ export default function Home() {
           )}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6 items-start">
+        <div className={isAdmin ? "grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6 items-start" : "max-w-2xl mx-auto w-full"}>
           <div>
             {/* Search bar */}
+            {isAdmin && (
             <div className="relative mb-4">
               <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
@@ -156,6 +157,7 @@ export default function Home() {
                 </button>
               )}
             </div>
+            )}
 
             {/* Search results */}
             {searchInput.trim() ? (
@@ -252,9 +254,11 @@ export default function Home() {
             )}
           </div>
 
+          {isAdmin && (
           <aside className="lg:sticky lg:top-8">
             <RecentBranches key={statsKey} />
           </aside>
+          )}
         </div>
       </main>
 

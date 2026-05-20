@@ -30,6 +30,17 @@ const TYPE_BADGE: Record<string, string> = {
   MISC: "bg-emerald-900 text-emerald-300",
 };
 
+function maskCustomer(customer: string): string {
+  if (!customer) return "";
+  return "Brand " + customer.charAt(0).toUpperCase();
+}
+
+function maskTitle(title: string, customer: string): string {
+  if (!customer || !title) return title;
+  const escaped = customer.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return title.replace(new RegExp(escaped, "gi"), "").replace(/\s+/g, " ").trim();
+}
+
 function Meta({ customer, branch }: { customer: string; branch: string }) {
   return (
     <div className="flex gap-2 mt-1">
@@ -53,48 +64,70 @@ export default function EntryCard({ entry, onDelete, showDate }: { entry: WorkEn
         {dateLabel && <span className="text-xs text-gray-500">{dateLabel}</span>}
       </div>
 
-      {entry.type === "BUG" && entry.bugEntry && (
-        <div className="flex flex-col gap-0.5">
-          <Link href={`/entries/${entry.id}`} className="text-white text-base font-bold hover:text-indigo-300 w-fit">
-            {entry.bugEntry.description}
-          </Link>
-          <a href={entry.bugEntry.bugUrl} target="_blank" rel="noopener noreferrer" className="text-indigo-400 text-xs truncate hover:underline w-fit max-w-full">
-            {entry.bugEntry.bugUrl}
-          </a>
-          <span className={`text-xs px-2 py-0.5 rounded-full w-fit ${DIFFICULTY_COLORS[entry.bugEntry.difficulty]}`}>
-            {entry.bugEntry.difficulty}
-          </span>
-          <Meta customer={entry.bugEntry.customer} branch={entry.bugEntry.branch} />
-        </div>
-      )}
-
-      {entry.type === "UI" && entry.uiEntry && (
-        <div className="flex flex-col gap-0.5">
-          <Link href={`/entries/${entry.id}`} className="text-white text-base font-bold hover:text-indigo-300 w-fit">
-            {entry.uiEntry.clientName}
-          </Link>
-          {entry.uiEntry.difficulty && (
-            <span className={`text-xs px-2 py-0.5 rounded-full w-fit ${DIFFICULTY_COLORS[entry.uiEntry.difficulty]}`}>
-              {entry.uiEntry.difficulty}
+      {entry.type === "BUG" && entry.bugEntry && (() => {
+        const { bugUrl, description, difficulty, customer, branch } = entry.bugEntry;
+        const displayCustomer = isAdmin ? customer : maskCustomer(customer);
+        const displayTitle = isAdmin ? description : maskTitle(description, customer);
+        return (
+          <div className="flex flex-col gap-0.5">
+            <Link href={`/entries/${entry.id}`} className="text-white text-base font-bold hover:text-indigo-300 w-fit">
+              {displayTitle}
+            </Link>
+            {isAdmin && (
+              <a href={bugUrl} target="_blank" rel="noopener noreferrer" className="text-indigo-400 text-xs truncate hover:underline w-fit max-w-full">
+                {bugUrl}
+              </a>
+            )}
+            <span className={`text-xs px-2 py-0.5 rounded-full w-fit ${DIFFICULTY_COLORS[difficulty]}`}>
+              {difficulty}
             </span>
-          )}
-          <Meta customer={entry.uiEntry.customer} branch={entry.uiEntry.branch} />
-        </div>
-      )}
+            <Meta customer={displayCustomer} branch={isAdmin ? branch : ""} />
+          </div>
+        );
+      })()}
 
-      {entry.type === "MISC" && entry.miscEntry && (
-        <div className="flex flex-col gap-0.5">
-          <Link href={`/entries/${entry.id}`} className="text-white text-base font-bold hover:text-indigo-300 w-fit">
-            {entry.miscEntry.description}
-          </Link>
-          {entry.miscEntry.difficulty && (
-            <span className={`text-xs px-2 py-0.5 rounded-full w-fit ${DIFFICULTY_COLORS[entry.miscEntry.difficulty]}`}>
-              {entry.miscEntry.difficulty}
-            </span>
-          )}
-          <Meta customer={entry.miscEntry.customer} branch={entry.miscEntry.branch} />
-        </div>
-      )}
+      {entry.type === "UI" && entry.uiEntry && (() => {
+        const { clientName, figmaUrl, difficulty, customer, branch } = entry.uiEntry;
+        const displayCustomer = isAdmin ? customer : maskCustomer(customer);
+        const displayTitle = isAdmin ? clientName : maskTitle(clientName, customer);
+        return (
+          <div className="flex flex-col gap-0.5">
+            <Link href={`/entries/${entry.id}`} className="text-white text-base font-bold hover:text-indigo-300 w-fit">
+              {displayTitle}
+            </Link>
+            {isAdmin && figmaUrl && (
+              <a href={figmaUrl} target="_blank" rel="noopener noreferrer" className="text-indigo-400 text-xs truncate hover:underline w-fit max-w-full">
+                {figmaUrl}
+              </a>
+            )}
+            {difficulty && (
+              <span className={`text-xs px-2 py-0.5 rounded-full w-fit ${DIFFICULTY_COLORS[difficulty]}`}>
+                {difficulty}
+              </span>
+            )}
+            <Meta customer={displayCustomer} branch={isAdmin ? branch : ""} />
+          </div>
+        );
+      })()}
+
+      {entry.type === "MISC" && entry.miscEntry && (() => {
+        const { description, difficulty, customer, branch } = entry.miscEntry;
+        const displayCustomer = isAdmin ? customer : maskCustomer(customer);
+        const displayTitle = isAdmin ? description : maskTitle(description, customer);
+        return (
+          <div className="flex flex-col gap-0.5">
+            <Link href={`/entries/${entry.id}`} className="text-white text-base font-bold hover:text-indigo-300 w-fit">
+              {displayTitle}
+            </Link>
+            {difficulty && (
+              <span className={`text-xs px-2 py-0.5 rounded-full w-fit ${DIFFICULTY_COLORS[difficulty]}`}>
+                {difficulty}
+              </span>
+            )}
+            <Meta customer={displayCustomer} branch={isAdmin ? branch : ""} />
+          </div>
+        );
+      })()}
 
       {isAdmin && onDelete && (
       <button
